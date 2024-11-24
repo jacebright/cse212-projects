@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.VisualStudio.TestPlatform.CoreUtilities.Extensions;
 
 public static class SetsAndMaps
 {
@@ -21,8 +22,31 @@ public static class SetsAndMaps
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
     public static string[] FindPairs(string[] words)
     {
-        // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        var pairs = new HashSet<String>(words);;
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            pairs.Add(words[i]);
+        }        
+        for (int i = 0; i < words.Length; i++)
+        {
+            string reversed = words[i][1].ToString() + words[i][0].ToString();
+            if (reversed == words[i]) {
+                pairs.Remove(words[i]);
+                continue;
+            }
+            if (pairs.Contains(reversed)) {
+                string together = words[i] + " & " + reversed;
+                pairs.Remove(reversed);
+                pairs.Remove(words[i]);
+                pairs.Add(together);
+            }
+            else {pairs.Remove(words[i]);}
+        }
+        
+
+        string[] answers = pairs.ToArray();
+        return answers;
     }
 
     /// <summary>
@@ -42,7 +66,15 @@ public static class SetsAndMaps
         foreach (var line in File.ReadLines(filename))
         {
             var fields = line.Split(",");
-            // TODO Problem 2 - ADD YOUR CODE HERE
+            var key = fields[3];
+            if (degrees.ContainsKey(key))
+            {
+                degrees[key] = degrees[key] + 1;
+            }
+            else
+            {
+                degrees.Add(key, 1);
+            }
         }
 
         return degrees;
@@ -66,8 +98,31 @@ public static class SetsAndMaps
     /// </summary>
     public static bool IsAnagram(string word1, string word2)
     {
-        // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        var dict = new Dictionary<int, char>();
+        // ensure the strings are stripped of spaces and have no capital letters
+        word1 = word1.ToLower().Replace(" ", "");
+        word2 = word2.ToLower().Replace(" ", "");
+
+        if (word1.Length != word2.Length)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < word1.Length; i++)
+        {
+            dict.Add(i, word1[i]);
+        }
+
+        foreach (char character in word2)
+        {
+            if (dict.ContainsValue(character))
+            {
+                dict[dict.FirstOrDefault(x => x.Value == character).Key] = ' ';
+            }
+            else { return false; }
+        }
+
+        return true;
     }
 
     /// <summary>
