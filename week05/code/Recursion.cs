@@ -108,6 +108,8 @@ public static class Recursion
             
         // Base Cases
         if (s == 0)
+            return 1;
+        else if (s < 0)
             return 0;
         else if (s == 1)
             return 1;
@@ -119,7 +121,7 @@ public static class Recursion
 
 
         // Solve using recursion
-        decimal ways = CountWaysToClimb(s - 1) + CountWaysToClimb(s - 2) + CountWaysToClimb(s - 3);
+        decimal ways = CountWaysToClimb(s - 3, remember) + CountWaysToClimb(s - 2, remember) + CountWaysToClimb(s - 1, remember);
         remember[s] = ways;
         return ways;
     }
